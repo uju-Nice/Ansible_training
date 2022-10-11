@@ -1,0 +1,42 @@
+- hosts: webservers
+  become: yes
+  vars:
+    http_port: 8080
+    https_port: 443
+    html-welcome-msg: "Hello World"
+  tasks:
+    - name: "install latest version of apache webserver"
+      apt: 
+         name: apache2 
+         state: latest
+    
+     - name: "install httpd"
+      apt: 
+        name: httpd 
+        state: present
+   
+    - name: start httpd process
+      service: 
+        name: httpd
+        enabled: yes
+        state: started
+
+  
+    - name: "write apache inside the configuartion file "
+      template: 
+        src: template/ports.config
+        dest: /etc/apache2/ports.config
+      notify:
+          - restart apache2
+   
+    - name: "write apache inside the configuartion file "
+      template: 
+        src: template/index.html
+        dest: /var/www/html/index.html
+      notify:
+          - restart apache2
+
+  handlers:
+    - name: restart apache2
+      service:
+      name: apache2

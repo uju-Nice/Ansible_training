@@ -1,0 +1,14 @@
+
+- name: Installing httpd and mysql
+  apt:
+    name:
+      - httpd
+      - mysql
+      state: installed
+- name: Enabling the httpd process
+  service:
+    name: httpd
+    enabled: yes
+    state: present
+    
+  

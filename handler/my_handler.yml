@@ -1,0 +1,6 @@
+
+handlers:
+  -  name: restarting the process
+     service:
+       name: httpd
+       state: restarted

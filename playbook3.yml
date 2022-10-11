@@ -1,0 +1,50 @@
+---
+- hosts: databaseserver
+  become: yes
+  gather_facts: true
+  vars:
+    mysql_username: "root"
+    mysql_password: "mysql_root_password"
+  tasks: 
+
+    - name: Install mysql and initialize
+      dnf:
+        name:
+          - mysql-server
+          - mysql-devel
+          - python39
+          - python39-devel
+          - python39-pip
+          - gcc
+        state: latest
+
+    - name: Install Required pip modules
+      pip:
+        name: PyMySQL
+        state: present
+        executable: pip3 
+
+    - name: Ensure mysql service is running
+      systemd:
+        name: mysqld
+        state: started
+        enabled: yes 
+
+    - name: Ensure root user can only login from localhost
+      mysql_user:
+        login_password: "{{ mysql_root_password }}"
+        check_implicit_admin: yes
+        name: root
+        host: "{{ item }}"
+        password: "{{ mysql_root_password }}"
+        state: present
+        with_items:
+           - localhost
+           - 127.0.0.1
+           - ::1
+         
+
+    
+   
+ 
+    

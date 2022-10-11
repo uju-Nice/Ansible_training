@@ -1,0 +1,22 @@
+- hosts: webservers
+  become: yes
+  roles:
+    - html
+    - httpd
+    - mysql
+  tags:
+   
+- hosts: webservers
+  become: yes
+  roles:
+    - html
+
+- hosts: applicationservers
+  become: yes
+  roles:
+    - httpd
+
+- hosts: database
+  become: yes 
+  roles:
+    - mysql
